@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+   <key>test plist</key>
+   <array>
+     <dict>
+       <key>Name</key>
+       <string>test</string>
+       <version major="1" minor="0"></version>
+     </dict>
+   </array>
+</dict>
+</plist>
