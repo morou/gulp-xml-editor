@@ -8,7 +8,7 @@ var xeditor = require("gulp-xml-editor");
 
 gulp.src("./manifest.xml")
   .pipe(xeditor(function(xml) {
-    // xml is libxmljs document object. You can call all libxmljs function.
+    // xml is libxmljs document object. You can call any libxmljs function.
     xml.get('//key[./text()="Version"]').nextElement().text('2.0.0');
     // must return libxmljs document object.
     return xml;
@@ -16,7 +16,7 @@ gulp.src("./manifest.xml")
   .pipe(gulp.dest("./dest"));
 ```
 
-Please see [libxmljs wiki page](https://github.com/polotek/libxmljs/wiki) to get information about libxmljs API.
+Please see [libxmljs wiki page](https://github.com/polotek/libxmljs/wiki) to get more information about libxmljs API.
 
 ## API
 ### xeditor(editorFunction)
