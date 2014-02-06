@@ -1,6 +1,6 @@
 {
   "name": "gulp-xml-editor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A gulp plugin to edit XML document (libxmljs wrapper)",
   "license": "MIT",
   "keywords": [
