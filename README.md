@@ -6,9 +6,12 @@ gulp-xml-editor is a [gulp](https://github.com/wearefractal/gulp) plugin to edit
 ```javascript
 var xeditor = require("gulp-xml-editor");
 
+/*
+  edit XML document by using user specific function
+*/
 gulp.src("./manifest.xml")
   .pipe(xeditor(function(xml) {
-    // xml is libxmljs document object. You can call any libxmljs function.
+    // 'xml' is libxmljs document object. You can call any libxmljs function.
     xml.get('//key[./text()="Version"]').nextElement().text('2.0.0');
     // must return libxmljs document object.
     return xml;
@@ -21,6 +24,8 @@ Please see [libxmljs wiki page](https://github.com/polotek/libxmljs/wiki) to get
 ## API
 ### xeditor(editorFunction)
 #### editorFunction
+Type: `function`
+
 The `editorFunction` must have the following signature: `function (xml) {}`, and must return libxmljs object.
 
 ## License
