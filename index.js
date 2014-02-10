@@ -16,6 +16,7 @@ module.exports = function (editor) {
 
     // ignore it
     if (file.isNull()) {
+      this.push(file);
       return callback();
     }
 

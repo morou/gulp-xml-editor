@@ -1,72 +1,75 @@
 /* jshint node: true */
-/* global describe, it */
+/* global it */
 
 var xeditor = require('../');
 var xmljs   = require('libxmljs');
-var gulp    = require("gulp");
-require('should');
+var gulp    = require('gulp');
+var gutil   = require('gulp-util');
+var fs      = require('fs');
+var should  = require('should');
 require('mocha');
 
-describe('gulp-xml-editor', function() {
-  describe('#xml()', function() {
+it('should raise error when missing option', function(done) {
+  should(function(){xeditor();}).throw('missing "editor function" option');
+  done();
+});
 
-    //
-    // test: raise error when missing option
-    //
-    it('should raise error when missing option', function(done) {
-      (function() {
-        var stream = gulp.src('test/test.xml').pipe(xeditor());
-        stream.on('error', done);
-        stream.on('data', done);
-      }).should.throw('missing "editor function" option');
+
+it('should raise error when invalid type of option', function(done) {
+  should(function(){xeditor(1);}).throw('"editor function" option must be function');
+  done();
+});
+
+
+it('should do path-through when input is null', function(done) {
+  xeditor(function(){})
+    .on('data',  function(file) {
+      should(file.contents).eql(null);
       done();
-    });
+    })
+    .write(new gutil.File({}));
+});
 
-    //
-    // test: raise error when invalid type of option
-    //
-    it('should raise error when invalid type of option', function(done) {
-      (function() {
-        var stream = gulp.src('test/test.xml').pipe(xeditor(100));
-        stream.on('error', done);
-        stream.on('data', done);
-      }).should.throw('"editor function" option must be function');
+
+it('should raise error when streaming input', function(done) {
+  xeditor(function(){})
+    .on('error', function(err) {
+      err.message.should.equal('Streaming is not supported');
       done();
-    });
+    })
+    .write(new gutil.File({
+      contents: fs.createReadStream('test/test.xml')
+    }));
+});
 
-    //
-    // test: modify text
-    //
-    it('should modify text of XML element', function(done) {
-      var stream = gulp.src('test/test.xml').pipe(xeditor(function(xml) {
-        xml.get('//key[./text()="Name"]').nextElement().text('new test');
-        return xml;
-      }));
-      stream.on('error', done);
-      stream.on('data', function(file) {
-        var xml = xmljs.parseXmlString(file.contents);
-        var name = xml.get('//key[./text()="Name"]').nextElement().text();
-        name.should.equal('new test');
-      });
-      stream.on('end', done);
-    });
 
-    //
-    // test: modify attribute
-    //
-    it('should modify attribute of XML element', function(done) {
-      var stream = gulp.src('test/test.xml').pipe(xeditor(function(xml) {
-        xml.get('//version').attr({'minor': '2'});
-        return xml;
-      }));
-      stream.on('error', done);
-      stream.on('data', function(file) {
-        var xml = xmljs.parseXmlString(file.contents);
-        var version = xml.get('//version').attr('minor');
-        version.value().should.equal('2');
-      });
-      stream.on('end', done);
-    });
+it('should modify text of XML element', function(done) {
 
+  var stream = gulp.src('test/test.xml').pipe(xeditor(function(xml) {
+    xml.get('//key[./text()="Name"]').nextElement().text('new test');
+    return xml;
+  }));
+
+  stream.on('data', function(file) {
+    var xml = xmljs.parseXmlString(file.contents);
+    var name = xml.get('//key[./text()="Name"]').nextElement().text();
+    name.should.equal('new test');
+    done();
+  });
+});
+
+
+it('should modify attribute of XML element', function(done) {
+
+  var stream = gulp.src('test/test.xml').pipe(xeditor(function(xml) {
+    xml.get('//version').attr({'minor': '2'});
+    return xml;
+  }));
+
+  stream.on('data', function(file) {
+    var xml = xmljs.parseXmlString(file.contents);
+    var version = xml.get('//version').attr('minor');
+    version.value().should.equal('2');
+    done();
   });
 });
