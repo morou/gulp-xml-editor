@@ -15,7 +15,7 @@ it('should raise error when missing option', function(done) {
 
 
 it('should raise error when invalid type of option', function(done) {
-  should(function(){xeditor(1);}).throw('"editor" option must be a function or object');
+  should(function(){xeditor(1);}).throw('"editor" option must be a function or array');
   done();
 });
 

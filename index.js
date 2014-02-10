@@ -40,9 +40,9 @@ module.exports = function (editor) {
 
   // check options
   if (typeof editor === 'function') editByXXX = editByFunction;
-  else if (typeof editor === 'object') editByXXX = editByObject;
+  else if (editor instanceof Array) editByXXX = editByObject;
   else if (typeof editor === 'undefined') throw new PluginError('gulp-xml-editor', 'missing "editor" option');
-  else throw new PluginError('gulp-xml-editor', '"editor" option must be a function or object');
+  else throw new PluginError('gulp-xml-editor', '"editor" option must be a function or array');
 
   // create through object
   return through.obj(function (file, encoding, callback) {
