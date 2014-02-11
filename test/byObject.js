@@ -13,44 +13,103 @@ it('should modify text of XML element (by object)', function(done) {
   ]));
 
   stream.on('data', function(file) {
-    var xml = xmljs.parseXmlString(file.contents);
-    var name = xml.get('//name').text();
-    name.should.equal('new name');
+    var expected = xmljs.parseXmlString(
+      '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<root>\n' +
+      '  <name>new name</name>\n' +
+      '  <version major="1" minor="0"></version>\n' +
+      '</root>'
+    );
+    xmljs.parseXmlString(file.contents).toString().should.eql(expected.toString());
     done();
   });
 });
 
 
-it('should modify single attribute of XML element (by object)', function(done) {
+it('should modify attribute of XML element (by object)', function(done) {
 
   var stream = gulp.src('test/test.xml').pipe(xeditor([
     {path: '//version', attr: {major: 10}}
   ]));
 
   stream.on('data', function(file) {
-    var xml = xmljs.parseXmlString(file.contents);
-    var version = xml.get('//version').attr('major');
-    version.value().should.equal('10');
+    var expected = xmljs.parseXmlString(
+      '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<root>\n' +
+      '  <name>this is name</name>\n' +
+      '  <version major="10" minor="0"></version>\n' +
+      '</root>'
+    );
+    xmljs.parseXmlString(file.contents).toString().should.eql(expected.toString());
     done();
   });
 });
 
 
-it('should modify multi attributes of XML element (by object)', function(done) {
+it('should add attribute of XML element (by object)', function(done) {
+
+  var stream = gulp.src('test/test.xml').pipe(xeditor([
+    {path: '//version', attr: {build: 20}}
+  ]));
+
+  stream.on('data', function(file) {
+    var expected = xmljs.parseXmlString(
+      '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<root>\n' +
+      '  <name>this is name</name>\n' +
+      '  <version major="1" minor="0" build="20"></version>\n' +
+      '</root>'
+    );
+    xmljs.parseXmlString(file.contents).toString().should.eql(expected.toString());
+    done();
+  });
+});
+
+
+it('should modify / add multiple attributes of XML element (by object)', function(done) {
 
   var stream = gulp.src('test/test.xml').pipe(xeditor([
     {path: '//version', attrs: [
       {major: 10},
-      {minor: 11}
+      {minor: 11},
+      {build: 20}
     ]}
   ]));
 
   stream.on('data', function(file) {
-    var xml = xmljs.parseXmlString(file.contents);
-    var major = xml.get('//version').attr('major');
-    var minor = xml.get('//version').attr('minor');
-    major.value().should.equal('10');
-    minor.value().should.equal('11');
+    var expected = xmljs.parseXmlString(
+      '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<root>\n' +
+      '  <name>this is name</name>\n' +
+      '  <version major="10" minor="11" build="20"></version>\n' +
+      '</root>'
+    );
+    xmljs.parseXmlString(file.contents).toString().should.eql(expected.toString());
+    done();
+  });
+});
+
+
+it('should do multiple editing at onece (by object)', function(done) {
+
+  var stream = gulp.src('test/test.xml').pipe(xeditor([
+    {path: '//version', attrs: [
+      {major: 10},
+      {minor: 11},
+      {build: 20}
+    ]},
+    {path: '//name', text: 'new name'}
+  ]));
+
+  stream.on('data', function(file) {
+    var expected = xmljs.parseXmlString(
+      '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<root>\n' +
+      '  <name>new name</name>\n' +
+      '  <version major="10" minor="11" build="20"></version>\n' +
+      '</root>'
+    );
+    xmljs.parseXmlString(file.contents).toString().should.eql(expected.toString());
     done();
   });
 });

@@ -14,9 +14,14 @@ it('should modify text of XML element (by function)', function(done) {
   }));
 
   stream.on('data', function(file) {
-    var xml = xmljs.parseXmlString(file.contents);
-    var name = xml.get('//name').text();
-    name.should.equal('new name');
+    var expected = xmljs.parseXmlString(
+      '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<root>\n' +
+      '  <name>new name</name>\n' +
+      '  <version major="1" minor="0"></version>\n' +
+      '</root>'
+    );
+    xmljs.parseXmlString(file.contents).toString().should.eql(expected.toString());
     done();
   });
 });
@@ -25,14 +30,19 @@ it('should modify text of XML element (by function)', function(done) {
 it('should modify attribute of XML element (by function)', function(done) {
 
   var stream = gulp.src('test/test.xml').pipe(xeditor(function(xml) {
-    xml.get('//version').attr({'minor': '2'});
+    xml.get('//version').attr({'major': '10'});
     return xml;
   }));
 
   stream.on('data', function(file) {
-    var xml = xmljs.parseXmlString(file.contents);
-    var version = xml.get('//version').attr('minor');
-    version.value().should.equal('2');
+    var expected = xmljs.parseXmlString(
+      '<?xml version="1.0" encoding="UTF-8"?>\n' +
+      '<root>\n' +
+      '  <name>this is name</name>\n' +
+      '  <version major="10" minor="0"></version>\n' +
+      '</root>'
+    );
+    xmljs.parseXmlString(file.contents).toString().should.eql(expected.toString());
     done();
   });
 });
