@@ -7,8 +7,8 @@ var PluginError = require('gulp-util').PluginError;
 module.exports = function (editor) {
 
   // edit XML document by user specific function
-  function editByFunction(xmlDoc) {
-    return editor(xmlDoc).toString();
+  function editByFunction(xmlDoc, xmljs) {
+    return editor(xmlDoc, xmljs).toString();
   }
 
   // edit XML document by user specific object
@@ -61,7 +61,7 @@ module.exports = function (editor) {
 
     // edit XML document
     try {
-      file.contents = new Buffer(editByXXX(xmljs.parseXmlString(file.contents.toString('utf8')), this));
+      file.contents = new Buffer(editByXXX(xmljs.parseXmlString(file.contents.toString('utf8'), xmljs), this));
     }
     catch (err) {
       this.emit('error', new PluginError('gulp-xml-editor', err));
