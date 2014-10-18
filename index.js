@@ -12,7 +12,7 @@ module.exports = function (editor) {
   }
 
   // edit XML document by user specific object
-  function editByObject(xmlDoc, ee) {
+  function editByObject(xmlDoc, xmljs, ee) {
 
     editor.forEach(function(ed) {
       var elem = xmlDoc.get(ed.path);
@@ -61,7 +61,7 @@ module.exports = function (editor) {
 
     // edit XML document
     try {
-      file.contents = new Buffer(editByXXX(xmljs.parseXmlString(file.contents.toString('utf8'), xmljs), this));
+      file.contents = new Buffer(editByXXX(xmljs.parseXmlString(file.contents.toString('utf8')), xmljs, this));
     }
     catch (err) {
       this.emit('error', new PluginError('gulp-xml-editor', err));
