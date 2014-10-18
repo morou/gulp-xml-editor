@@ -21,10 +21,17 @@ gulp.src("./manifest.xml")
   edit XML document by using user specific function
 */
 gulp.src("./manifest.xml")
-  .pipe(xeditor(function(xml) {
-    // 'xml' is libxmljs document object. You can call any libxmljs function.
+  .pipe(xeditor(function(xml, xmljs) {
+
+    // 'xml' is libxmljs Document object.
     xml.get('//key[./text()="Version"]').nextElement().text('2.0.0');
-    // must return libxmljs document object.
+
+    // 'xmljs' is libxmljs object. you can call any libxmljs function.
+    var child = new xmljs.Element(xml, 'note');
+    child.text('some text');
+    xml.get('//description').addChild(child);
+
+    // must return libxmljs Document object.
     return xml;
   }))
   .pipe(gulp.dest("./dest"));
@@ -59,7 +66,7 @@ You can't specify xpath to attribute nor text node.
 #### editorFunction
 Type: `function`
 
-The `editorFunction` must have the following signature: `function (xml) {}`, and must return libxmljs object.
+The `editorFunction` must have the following signature: `function (xml, [xmljs]) {}`, and must return libxmljs Document object. The `xml` argument is libxmljs Document object, and the `xmljs` argument is libxmljs object.
 
 ## License
 [MIT License](http://en.wikipedia.org/wiki/MIT_License)
