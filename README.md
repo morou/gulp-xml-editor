@@ -16,6 +16,16 @@ gulp.src("./manifest.xml")
   ]))
   .pipe(gulp.dest("./dest"));
 
+/*
+  edit XML document by using user specific object using a namespace
+*/
+gulp.src("./manifest.xml")
+  .pipe(xeditor([
+    {path: '//xmlns:name', text: 'new names'},
+    {path: '//xmlns:version', attr: {'major': '2'}}
+  ], 'http://www.w3.org/ns/widgets'))
+  .pipe(gulp.dest("./dest"));
+
 
 /*
   edit XML document by using user specific function

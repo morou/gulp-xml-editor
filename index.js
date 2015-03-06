@@ -4,7 +4,7 @@ var xmljs       = require('libxmljs');
 var through     = require('through2');
 var PluginError = require('gulp-util').PluginError;
 
-module.exports = function (editor) {
+module.exports = function (editor, namespace) {
 
   // edit XML document by user specific function
   function editByFunction(xmlDoc, xmljs) {
@@ -15,7 +15,7 @@ module.exports = function (editor) {
   function editByObject(xmlDoc, xmljs, ee) {
 
     editor.forEach(function(ed) {
-      var elem = xmlDoc.get(ed.path);
+      var elem = (namespace == undefined) ? xmlDoc.get(ed.path) : xmlDoc.get(ed.path, namespace);
       if (!elem || !(elem instanceof xmljs.Element)) {
         ee.emit('error', new PluginError('gulp-xml-editor', 'Can\'t find element at "' + ed.path + '"'));
         return;
@@ -72,3 +72,4 @@ module.exports = function (editor) {
   });
 
 };
+
