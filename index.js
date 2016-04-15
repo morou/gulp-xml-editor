@@ -22,6 +22,7 @@ module.exports = function (editor, namespace) {
       }
 
       if (ed.text !== undefined && ed.text !== null) {
+        ed.text = ed.text.replace('{element}', elem.text() );
         elem.text(ed.text);
       }
 
