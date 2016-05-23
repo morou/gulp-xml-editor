@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "gulp-util": "~3.0.1",
-    "libxmljs": "^0.14.0",
+    "libxmljs": "^0.18.0",
     "through2": "~1.1.1"
   },
   "devDependencies": {
